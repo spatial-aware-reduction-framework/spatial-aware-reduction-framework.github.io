@@ -1,11 +1,466 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>STORM: Spatial-Aware Reduction Framework: Towards Efficient and Faithful Visual State Space Models</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- MathJax for rendering equations -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['"Source Serif 4"', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .gradient-text {
+            background: linear-gradient(90deg, #0c4a6e 0%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .paper-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0,0,0,0.05);
+        }
+    </style>
 </head>
-<body>
-    <p>Hello! This is my paper's website for testing</p>
+<body class="bg-gray-50 text-gray-800 antialiased selection:bg-brand-100 selection:text-brand-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="font-bold text-xl tracking-tight text-gray-900">STORM</div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
+                    <a href="#abstract" class="hover:text-brand-600 transition">Abstract</a>
+                    <a href="#method" class="hover:text-brand-600 transition">Method</a>
+                    <a href="#results" class="hover:text-brand-600 transition">Results</a>
+                    <a href="#examples" class="hover:text-brand-600 transition">Examples</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-20 pb-16 text-center px-4">
+        <div class="max-w-5xl mx-auto">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-gray-900">
+                Spatial-Aware Reduction Framework: <br class="hidden md:block" />
+                Towards Efficient and Faithful <span class="gradient-text">Visual State Space Models</span>
+            </h1>
+            
+            <!-- Authors -->
+            <div class="mt-8 text-lg text-gray-700 leading-relaxed">
+                <span class="whitespace-nowrap">Jindi Lv<sup>1,2</sup></span>, 
+                <span class="whitespace-nowrap">Yuhao Zhou<sup>1</sup></span>, 
+                <span class="whitespace-nowrap">Zheng Zhu<sup>2</sup></span>, 
+                <span class="whitespace-nowrap">Xiaofeng Wang<sup>2,3</sup></span>, 
+                <span class="whitespace-nowrap">Guan Huang<sup>2</sup></span>, 
+                <span class="whitespace-nowrap">Jiancheng Lv<sup>1</sup></span>
+            </div>
+            
+            <!-- Affiliations -->
+            <div class="mt-4 text-sm text-gray-500 font-medium uppercase tracking-wide">
+                <span class="mr-4"><sup>1</sup> Sichuan University</span>
+                <span class="mr-4"><sup>2</sup> Giga-AI</span>
+                <span><sup>3</sup> Tsinghua University</span>
+            </div>
+
+            <div>作者信息需修改</div>
+
+            <!-- Action Buttons -->
+            <div class="mt-10 flex flex-wrap justify-center gap-4">
+                <a href="https://arxiv.org/abs/2512.01485" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Paper
+                </a>
+                <a href="https://github.com/lvjindi/M3PO" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-full shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    Code (Coming Soon)
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Abstract -->
+    <section id="abstract" class="py-12 bg-white border-y border-gray-100">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Abstract</h2>
+            <p class="text-lg text-gray-700 font-serif leading-relaxed text-justify">
+              Mamba demonstrates strong efficiency in modeling long visual sequences. However, when token reduction is applied to structurally enhanced Mamba variants, these models exhibit a severe performance collapse. We attribute this degradation to the spatially agnostic nature of existing reduction methods, which violate the two-dimensional structural premise required by the selective scanning mechanism. 
+              <br><br>
+              In this work, we propose <strong>STORM</strong>, <strong>a spatial-aware token reduction framework</strong> designed to maintain structural integrity throughout the compression process. STORM reformulates reduction into a structured operation on spatial units, enforcing localized constraints to maintain both grid topology and neighborhood coherence.  As a plug-and-play module, STORM equips existing reduction pipelines with explicit spatial awareness without any training. 
+              Empirical results demonstrate that STORM achieves state-of-the-art pruning accuracy across diverse vision Mamba backbones under training-free settings. Notably, STORM delivers a substantial accuracy recovery on VMamba, outperforming prior methods by up to <strong>63.3% </strong> top-1 accuracy. Meanwhile, STORM incurs only a <strong>1.0%</strong> accuracy drop on PlainMamba, achieving performance comparable to ViT.
+            </p>
+        </div>
+    </section>
+
+    <!-- Overview Figure -->
+
+    <section class="py-16">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="bg-white rounded-xl paper-shadow p-2 overflow-hidden">
+                <!-- Figure 1 Image -->
+                <img src="./assets/Figure1.png" alt="Figure 1: Comparative analysis of reasoning paradigms" class="w-full h-auto rounded-lg border border-gray-100">
+            </div>
+            <p class="mt-4 text-gray-600 text-center max-w-3xl mx-auto text-sm">
+                <strong>Figure 1. Motivation and efficacy of the proposed spatial-aware token reduction framework.</strong> STORM demonstrates consistent improvements in token reduction performance across different reduction rates.
+            </p>
+        </div>
+    </section>
+
+    <!-- Method Section -->
+    <section id="method" class="py-16 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Methodology</h2>
+            
+             <!-- Figure 3 (Full Width, Auto Height) -->
+            <div class="bg-white rounded-xl paper-shadow p-2 mb-10 overflow-hidden">
+                <img src="./assets/Figure3.png" alt="Figure 3: Multi-Path Collaborative Mechanism" class="w-full h-auto rounded-lg border border-gray-100">
+                <p class="mt-3 text-center text-sm text-gray-500 italic">Figure 3. Overview of STORM. The framework performs spatially structured token reduction in two decoupled stages: row-wise and then
+                  column-wise reduction within localized windows, preserving the 2D grid layout required for selective scanning.</p>
+            </div>
+
+            <!-- Description (Below Figure) -->
+            <div class="max-w-6xl mx-auto">
+                <p class="text-lg leading-relaxed text-center text-gray-700 mb-8 max-w-4xl mx-auto">
+                  The STORM framework proposes a lightweight solution that refactors token reduction into a spatially structured process, as illustrated in Figure 3 above. The framework comprises two core components:
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Component 1 -->
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center mb-3">
+                            <span class="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-brand-100 text-brand-600 font-bold text-sm mr-3">1</span>
+                            <h3 class="font-bold text-gray-900">Dimensional Decoupling</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                          Instead of globally flattening tokens, STORM refactors the reduction process into two successive stages—row-wise and column-wise. This preserves a regular 2D grid topology, ensuring seamless compatibility with the 2D Selective Scan (SS2D) mechanism in Mamba.
+                        </p>
+                    </div>
+
+                    <!-- Component 2 -->
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center mb-3">
+                            <span class="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-brand-100 text-brand-600 font-bold text-sm mr-3">2</span>
+                            <h3 class="font-bold text-gray-900">Localized Window</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                          o prevent semantic distortion from long-range interference, STORM partitions the feature map into non-overlapping local windows. Reduction operations are strictly confined within these contiguous neighborhoods to protect fine-grained details and local coherence.
+                        </p>
+                    </div>
+
+                    <!-- Component 3 -->
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center mb-3">
+                            <span class="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-brand-100 text-brand-600 font-bold text-sm mr-3">3</span>
+                            <h3 class="font-bold text-gray-900">Faithful Scanning Restoration</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                          By maintaining a structured layout, STORM ensures that the causal propagation paths of the four-way scanning are not disrupted. This allows the model to retain accurate spatial awareness and performance during inference without requiring any re-training.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-6">
+          <h2 class="text-3xl font-bold text-gray-900 mb-2 text-center">Experimental Results</h2>
+          <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+              STORM significantly prevents performance collapse in Vision Mamba models during token reduction, outperforming standard methods across ImageNet and downstream tasks.
+          </p>
+  
+          <div class="flex justify-center mb-10">
+            <div class="bg-gray-100 p-1 rounded-lg border border-gray-200 inline-flex shadow-inner flex-wrap justify-center">
+                <button class="result-btn active px-4 py-2 text-sm font-semibold rounded-md text-blue-700 bg-white shadow-sm transition-all" onclick="switchResults('small')">
+                    VMamba-S
+                </button>
+                <button class="result-btn px-4 py-2 text-sm font-semibold rounded-md text-gray-500 hover:text-gray-900 transition-all" onclick="switchResults('base')">
+                    VMamba-B
+                </button>
+                <button class="result-btn px-4 py-2 text-sm font-semibold rounded-md text-gray-500 hover:text-gray-900 transition-all" onclick="switchResults('l2')">
+                    PlainMamba-L2
+                </button>
+                <button class="result-btn px-4 py-2 text-sm font-semibold rounded-md text-gray-500 hover:text-gray-900 transition-all" onclick="switchResults('l3')">
+                    PlainMamba-L3
+                </button>
+            </div>
+        </div>
+  
+          <div class="grid md:grid-cols-2 gap-8 mb-12">
+              <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-md">
+                  <h3 class="text-lg font-semibold text-gray-900 text-center mb-4">ImageNet-1K Accuracy</h3>
+                  <div class="relative h-72 w-full">
+                      <canvas id="chartClassification"></canvas>
+                  </div>
+              </div>
+  
+              <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-md">
+                  <h3 class="text-lg font-semibold text-gray-900 text-center mb-4">COCO Detection AP</h3>
+                  <div class="relative h-72 w-full">
+                      <canvas id="chartDetection"></canvas>
+                  </div>
+              </div>
+          </div>
+  
+          <div class="grid md:grid-cols-3 gap-6">
+              <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
+                  <div id="stat-acc" class="text-3xl font-bold text-blue-600 mb-1">76.4%</div>
+                  <div class="text-sm font-medium text-gray-500">ImageNet Top-1 Acc</div>
+                  <div class="text-xs text-gray-400 mt-2">STORM (ToMe)</div>
+              </div>
+              <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
+                  <div id="stat-gain" class="text-3xl font-bold text-blue-600 mb-1">+56.7%</div>
+                  <div class="text-sm font-medium text-gray-500">Accuracy Recovery</div>
+                  <div class="text-xs text-gray-400 mt-2">vs. Standard ToMe</div>
+              </div>
+              <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
+                  <div id="stat-fps" class="text-3xl font-bold text-blue-600 mb-1">1.4x</div>
+                  <div class="text-sm font-medium text-gray-500">Inference Speedup</div>
+                  <div class="text-xs text-gray-400 mt-2">Zero Re-training Cost</div>
+              </div>
+          </div>
+      </div>
+  </section>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Example -->
+  <section id="examples" class="py-16 bg-gray-50 border-t border-gray-200">
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Qualitative & Feature Analysis</h2>
+        
+        <div class="flex flex-wrap justify-center mb-8 gap-2">
+            <div class="bg-white p-1 rounded-lg border border-gray-200 inline-flex shadow-sm">
+                <button class="tab-btn active px-4 py-2 text-sm font-medium rounded-md text-blue-700 bg-blue-50" onclick="switchTab('topology')">
+                    Topology Preservation
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900" onclick="switchTab('extreme')">
+                    Extreme Compression (95%)
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900" onclick="switchTab('robustness')">
+                    Scanning Robustness
+                </button>
+            </div>
+        </div>
+
+        <div id="topology-content" class="tab-content block">
+          <div class="space-y-6">
+              <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-red-200">
+                  <div class="p-4 border-b border-red-100 bg-red-50/50 flex justify-between items-center">
+                      <div>
+                          <span class="text-xs font-bold uppercase tracking-wider text-red-600">The Problem</span>
+                          <h3 class="text-lg font-bold text-gray-900">Spatially-Agnostic Reduction (Standard ToMe / Pruning)</h3>
+                      </div>
+                      <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">Performance Collapse</span>
+                  </div>
+                  
+                  <div class="p-6">
+                      <div class="grid md:grid-cols-2 gap-8 items-center">
+                          <div class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
+                              <img src="assets/broken_scan.png" alt="Broken Scanning Path" class="max-h-full">
+                          </div>
+                          <div class="text-sm text-gray-700 space-y-3">
+                              <p class="font-semibold text-red-800">Why it fails:</p>
+                              <p>Conventional methods treat tokens as a 1D sequence. When tokens are pruned or merged globally:</p>
+                              <ul class="list-disc ml-5 space-y-1">
+                                  <li>The <span class="bg-red-100 text-red-700 px-1 font-mono">2D Grid Topology</span> is completely destroyed.</li>
+                                  <li>The <span class="font-semibold">Selective Scan (SS2D)</span> paths become fragmented and non-contiguous.</li>
+                                  <li>Critical causal dependencies between adjacent pixels are lost, leading to <strong>~50% accuracy drop</strong> on VMamba-S.</li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+      
+              <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-green-200">
+                  <div class="p-4 border-b border-green-100 bg-green-50/50 flex justify-between items-center">
+                      <div>
+                          <span class="text-xs font-bold uppercase tracking-wider text-green-600">The Solution</span>
+                          <h3 class="text-lg font-bold text-gray-900">STORM: Spatial-aware Token Reduction Framework</h3>
+                      </div>
+                      <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Faithful Reconstruction</span>
+                  </div>
+                  
+                  <div class="p-6">
+                      <div class="grid md:grid-cols-2 gap-8 items-center">
+                          <div class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
+                              <img src="assets/storm_scan.png" alt="STORM Preserved Path" class="max-h-full">
+                          </div>
+                          <div class="text-sm text-gray-700 space-y-3">
+                              <p class="font-semibold text-green-800">How STORM fixes it:</p>
+                              <p>STORM refactors the reduction into <strong>Structured Row & Column stages</strong>:</p>
+                              <ul class="list-disc ml-5 space-y-1">
+                                  <li><strong>Dimensional Decoupling:</strong> Ensures the output always forms a valid sub-grid.</li>
+                                  <li><strong>Scanning Fidelity:</strong> The four-way scanning directions (Top-Left to Bottom-Right, etc.) remain intact and continuous.</li>
+                                  <li><strong>Zero-Shot Recovery:</strong> Restores accuracy to <strong>80.9%</strong> without a single epoch of fine-tuning.</li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div id="extreme-content" class="tab-content hidden">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 p-8">
+            <h4 class="font-bold text-gray-900 mb-8 text-center text-xl">Semantic Grouping Analysis (95% Reduction)</h4>
+            
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 lg:gap-12">
+                <div class="flex-1 w-full max-w-[300px]">
+                    <div class="relative bg-gray-50 rounded-xl border-2 border-gray-100 shadow-inner overflow-hidden group">
+                        <img src="./assets/original.png" alt="Input Image" class="w-full h-auto block">
+                        <div class="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-sm py-2 text-white text-xs text-center">
+                            Input Image (26×26 Tokens)
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="flex items-center justify-center py-4 md:py-0">
+                    <div class="bg-blue-50 p-3 rounded-full shadow-sm border border-blue-100">
+                        <svg class="w-8 h-8 text-blue-600 animate-pulse md:rotate-0 rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+    
+                <div class="flex-1 w-full max-w-[300px]">
+                    <div class="relative bg-gray-50 rounded-xl border-2 border-blue-200 shadow-md overflow-hidden ring-4 ring-blue-50">
+                        <img src="./assets/storm.png" alt="STORM Merging Result" class="w-full h-auto block">
+                        <div class="absolute bottom-0 left-0 right-0 bg-blue-600/60 backdrop-blur-sm py-2 text-white text-xs text-center font-bold">
+                            STORM Output (6×6 Tokens)
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="mt-10 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 flex items-start gap-4">
+                <div class="bg-blue-600 text-white p-2 rounded-lg mt-1">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="text-sm text-blue-900 leading-relaxed">
+                    <p><strong>Structural Preservation:</strong> Even with a <strong>95% reduction ratio</strong>, STORM avoids the "checkerboard noise" of conventional methods. By constraining reduction within local windows and preserving grid topology, patches are grouped into <strong>semantically coherent objects</strong>, which is vital for the SS2D mechanism to maintain faithful inference.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="robustness-content" class="tab-content hidden">
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 p-6">
+          <div class="flex items-center justify-between mb-6">
+              <h4 class="font-bold text-gray-900">Efficiency vs. Fidelity (Pareto Curve)</h4>
+              <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Training-Free Deployment</span>
+          </div>
+  
+          <div class="grid md:grid-cols-3 gap-6">
+              <div class="md:col-span-2 bg-gray-50 rounded-xl p-4 border border-gray-100">
+                  <div class="relative h-80 w-full">
+                      <canvas id="chartPareto"></canvas>
+                  </div>
+                  <p class="text-center text-xs text-gray-500 mt-4 italic">
+                      Figure: Top-1 Accuracy vs. Throughput (Higher and further right is better).
+                  </p>
+              </div>
+  
+              <div class="flex flex-col justify-center space-y-4">
+                  <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                      <h5 class="text-sm font-bold text-blue-800 mb-1">Superior Robustness</h5>
+                      <p class="text-xs text-blue-700 leading-relaxed">
+                          STORM stays above <b>80%</b> accuracy even when throughput increases by <b>1.4x</b>. Standard ToMe collapses to 20% at the same speed.
+                      </p>
+                  </div>
+                  <div class="p-4 bg-purple-50 border-l-4 border-purple-500 rounded-r-lg">
+                      <h5 class="text-sm font-bold text-purple-800 mb-1">Downstream Ready</h5>
+                      <p class="text-xs text-purple-700 leading-relaxed">
+                          The same spatial-aware logic recovers <b>40+ mAP</b> points in Object Detection without fine-tuning.
+                      </p>
+                  </div>
+                  <div class="text-[10px] text-gray-400 text-center uppercase tracking-widest">
+                      Interactive visualization based on Figure 4
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+    </div>
+</section>
+
+    <!-- Citation -->
+    <section class="py-16 bg-white border-t border-gray-200">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Citation</h2>
+            <div class="bg-gray-800 rounded-lg p-6 overflow-x-auto relative group">
+                <button class="absolute top-4 right-4 text-gray-400 hover:text-white transition" onclick="copyCitation()">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+                <pre class="text-gray-300 font-mono text-sm" id="citation-text">@article{lv2026spatial,
+                  title={Spatial-Aware Reduction Framework:
+                    Towards Efficient and Faithful Visual State Space Models},
+                  author={Lv, Jindi and Li, Aoyu and Zhou, Yuhao and Zhu, Zheng and ...},
+                  journal={xxx},
+                  year={2026}
+                }</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-12">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="text-gray-500 text-sm mb-4 md:mb-0">
+                &copy; 2025 M3PO Project.
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-gray-400 hover:text-gray-600">Sichuan University</a>
+                <a href="#" class="text-gray-400 hover:text-gray-600">GigaAI</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+<!-- <script type="module" src="/index.tsx"></script> -->
 </body>
 </html>
